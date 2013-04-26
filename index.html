@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Washington State Homeless Chart</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link type="text/stylesheet" href="css/style.css" rel="stylesheet">
+  </head>
+  
+  <body>
+    <script type="text/javascript" src="../scripts/d3.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    
+    <div class="row-fluid">
+      <div class="span12">
+        <h1 class="text-center">WA Homeless Chart Prototype</h1>
+      </div>
+    </div>
+    <div class="row-fluid">
+      <div class="span12">
+        <figure><div class="charts" id="relative-chart">
+        </div>
+        <figcaption><strong>Washington State Homeless inequality between races, by county.</strong> Bar heights indicate the percentage of homeless families relative to their portion of the general population. Note that this chart is for internal evaluation purposes and data has not yet been verified.</figcaption></figure>
+      </div>
+    </div>
+    <div class="row-fluid">
+      <div class="span6">
+        <div class="charts" id="vert-stack-barchart">
+        </div>
+      </div>
+      <div class="span6">
+        <div class="charts" id="barchart-transition">
+        </div>
+      </div>
+    </div>
+
+<!--
+    <script type="text/javascript">
+      var w = 300;
+      var h = 400;
+      var padding = 45;
+      
+      var data = [
+        [
+        	{ x: 0, y: 0.577 },
+        	{ x: 1, y: 0.820 },
+        	{ x: 2, y: 0.309 },
+        	{ x: 3, y: 0.719 }
+        ],
+        [
+        	{ x: 0, y: 0.040 },
+        	{ x: 1, y: 0.018 },
+        	{ x: 2, y: 0.024 },
+        	{ x: 3, y: 0.011 }
+        ],
+        [
+        	{ x: 0, y: 0.013 },
+        	{ x: 1, y: 0.075 },
+        	{ x: 2, y: 0.032 },
+        	{ x: 3, y: 0.150 }
+        ],
+        [
+        	{ x: 0, y: 0.168 },
+        	{ x: 1, y: 0.038 },
+        	{ x: 2, y: 0.463 },
+        	{ x: 3, y: 0.065 }
+        ],
+        [
+        	{ x: 0, y: 0.025 },
+        	{ x: 1, y: 0.007 },
+        	{ x: 2, y: 0.025 },
+        	{ x: 3, y: 0.008 }
+        ],
+        [
+        	{ x: 0, y: 0.068 },
+        	{ x: 1, y: 0.043 },
+        	{ x: 2, y: 0.101 },
+        	{ x: 3, y: 0.047 }
+        ],
+        [
+        	{ x: 0, y: 0.035 },
+        	{ x: 1, y: 0.000 },
+        	{ x: 2, y: 0.012 },
+        	{ x: 3, y: 0.000 }
+        ]
+      ];
+                                 
+      var stack = d3.layout.stack();
+      stack(data);
+      
+      var colors = d3.scale.category10();
+      
+      var xScale = d3.scale.ordinal()
+                           .domain(d3.range(data[0].length))
+                           .rangeRoundBands([padding, w], .2);
+                           
+      var yScale = d3.scale.linear()
+                           .domain([0, 1])
+                           .range([h, padding]);
+                           
+      var formatAsPercentage = d3.format("%");
+                           
+      var xAxis = d3.svg.axis()
+                        .scale(xScale)
+                        .orient("bottom")
+                        
+      var yAxis = d3.svg.axis()
+                        .scale(yScale)
+                        .orient("left")
+                        .ticks(5)
+                        .tickFormat(formatAsPercentage);
+      
+      var svg = d3.select("body").select("#vert-stack-barchart")
+                  .append("svg")
+                  .attr("w", w + padding)
+                  .attr("h", h + padding);
+                  
+      var groups = svg.selectAll("g")
+                     .data(data)
+                     .enter()
+                     .append("g")
+                     .style("fill", function (d, i) {
+                       return colors(i);
+                     });
+      
+      var rects = groups.selectAll("rect")
+                        .data(function(d) { return d; })
+                        .enter()
+                        .append("rect")
+                        .attr("x", function(d, i) { return xScale(i); })
+                        .attr("y", function(d, i) { return yScale(d.y0 + d.y); })
+                        .attr("height", function(d) { return h - yScale(d.y); })
+                        .attr("width", xScale.rangeBand())
+                        .append("title")
+                        .text(function(d) {
+                          var num = d.y * 100;
+                          var round = num.toPrecision(2);
+                          return round + "%";
+                        })
+                        .on("mouseover", function(d) {
+                          d3.select(this)
+                            .attr("fill", "orange");
+                        });
+                        
+      svg.append("g")
+         .attr("class", "axis")
+         .attr("transform", "translate(0," + h + ")")
+       	 .call(xAxis);
+        	 
+      svg.append("g")
+         .attr("class", "axis")
+         .attr("transform", "translate(" + padding + ",0)")
+         .call(yAxis);
+    </script>
+    
+    <script type="text/javascript">
+    
+/*
+      var stack = d3.layout.stack();
+      stack(data);
+      
+      var colors = d3.scale.category10();
+      
+      var xScale = d3.scale.ordinal()
+                           .domain(d3.range(data[0].length))
+                           .rangeRoundBands([0, w], .2);
+                           
+      var yScale = d3.scale.linear()
+                           .domain([0, 1])
+                           .range([0, h]);
+*/
+      
+      var svg2 = d3.select("#barchart-transition")
+                   .append("svg")
+                   .attr("w", w)
+                   .attr("h", h);
+                  
+      var groups2 = svg2.selectAll("g")
+                        .data(data)
+                        .enter()
+                        .append("g")
+                        .style("fill", function (d, i) {
+                          return colors(i);
+                        });
+                     
+      var rects2 = groups2.selectAll("rect")
+                          .data(function(d) { return d; })
+                          .enter()
+                          .append("rect")
+                          .attr("x", function(d, i) { return xScale(i); })
+                          .attr("y", function(d, i) { return yScale(d.y0 + d.y); })
+                          .attr("height", function(d) { return h - yScale(d.y); })
+                          .attr("width", xScale.rangeBand());
+                        
+      /*
+d3.select("barchart-transition")
+        .on("click", function() {
+          
+        }
+*/
+    </script>
+-->
+
+    <script>
+      var margin = {top: 20, right: 40, bottom: 30, left: 0},
+          width = 960 - margin.left - margin.right,
+          height = 500 - margin.top - margin.bottom;
+          
+      var colors = d3.scale.category10();
+      
+      var formatAsPercentage = d3.format("%");
+          
+      var x0 = d3.scale.ordinal()
+          .rangeRoundBands([0, width], .25);
+          
+      var x1 = d3.scale.ordinal();
+      
+      var y = d3.scale.linear()
+          .domain([5, -6])
+          .range([0, height]);
+          
+      var xAxis2 = d3.svg.axis()
+          .scale(x0)
+          .orient("bottom");
+          
+      var yAxis2 = d3.svg.axis()
+          .scale(y)
+          .orient("right")
+          .tickSize(width)
+          .tickFormat(formatAsPercentage);
+          
+      var svg3 = d3.select("#relative-chart").append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+      
+      d3.csv("./data/log-data-only.csv", function(error, csvdata) {
+        var areaName = d3.keys(csvdata[0]).filter(function(key) { return key !== "Area"} );
+        
+        csvdata.forEach(function(d, i) {
+          d.stat = areaName.map(function(name) { 
+            return {name: name, value: +d[name]}; 
+          })
+        });
+        
+        x0.domain(csvdata.map(function(d) { return d.Area; }));
+        x1.domain(areaName).rangeRoundBands([0, x0.rangeBand()]);
+        
+        var geoGroup = svg3.selectAll(".county")
+          .data(csvdata)
+          .enter().append("g")
+          .attr("class", "g")
+          .attr("transform", function(d) {
+            return "translate(" + x0(d.Area) + ",0)";
+          });
+          
+        geoGroup.selectAll("rect")
+          .data(function(d) { return d.stat; })
+          .enter().append("rect")
+          .attr("width", x1.rangeBand())
+          .attr("x", function(d) { return x1(d.name); })
+          .attr("y", function(d) { return y(Math.max(0, d.value)); })
+          .attr("height", function(d) { return Math.abs(y(d.value) - y(0)); })
+          .style("fill", function(d) { return colors(d.name); });
+          
+        svg3.append("g")
+          .attr("class", "x axis")
+          .attr("transform", "translate(0,0)")
+          .call(xAxis2);
+          
+        svg3.append("g")
+          .attr("class", "y axis")
+          .call(yAxis2);
+
+        var legend = svg3.selectAll(".legend")
+          .data(areaName.slice())
+          .enter().append("g")
+          .attr("class", "legend")
+          .attr("transform", function(d, i) { return "translate(0," + i * 18 + ")"; });
+          
+        legend.append("rect")
+          .attr("x", 6)
+          .attr("y", height - 110)
+          .attr("width", 14)
+          .attr("height", 14)
+          .style("fill", colors)
+          
+        legend.append("text")
+          .attr("x", 26)
+          .attr("y", height - 110)
+          .attr("dy", "1em")
+          //.style("text-anchor", "end")
+          .text(function(d) { return d; });
+          
+      });
+
+    </script>
+  </body>
+</html>
